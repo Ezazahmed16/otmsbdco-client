@@ -1,70 +1,118 @@
-# Getting Started with Create React App
+        const product_images = Array.from(event.target.image.files);
+        console.log(product_images)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+        const imageUrls = await Promise.all(
+            product_images.map(async (file) => {
+                const formData = new FormData();
+                formData.append('image', file);
 
-## Available Scripts
+                // const response = await axios.post('https://api.imgbb.com/1/upload?&key=c76efd57d012df5b882d44b0f8f3394f', formData);
 
-In the project directory, you can run:
+                // const imageUplod = response.data.data.url;
+                const url = 'https://api.imgbb.com/1/upload?&key=c76efd57d012df5b882d44b0f8f3394f'
+                fetch(url, {
+                        method: 'POST',
+                        body: formData,
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            console.log(data.data.url)
+                            const product = {
+                                product_name,
+                                product_description,
+                                product_features,
+                                product_prices,
+                                title: title,
+                                product_images: data.data.url,
+            
+                            }
+                            console.log(product)
+                            // save doctor information to the database
+                            fetch('https://project-one-server-ezazahmed16.vercel.app/products', {
+                                method: 'POST',
+                                headers: {
+                                    'content-type': 'application/json',
+                                },
+                                body: JSON.stringify(product)
+                            })
+                                .then(res => res.json())
+                                .then(result => {
+                                    console.log(result);
+                                    toast.success(`${product.product_name} is added successfully`);
+                                    setIsLoading(false)
+                                })
+            
+                        })
+                        .catch(error => console.log(error))
 
-### `npm start`
+            })
+        );
+        setProductImages(imageUrls);
+        // const product = {
+        //     product_name,
+        //     product_description,
+        //     product_features,
+        //     product_prices,
+        //     title: title,
+        //     product_images: productImages,
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+        // }
+        // // save doctor information to the database
+        // await fetch('https://project-one-server-ezazahmed16.vercel.app/products', {
+        //     method: 'POST',
+        //     headers: {
+        //         'content-type': 'application/json',
+        //     },
+        //     body: JSON.stringify(product)
+        // })
+        //     .then(res => res.json())
+        //     .then(result => {
+        //         console.log(result);
+        //         toast.success(`${product.product_name} is added successfully`);
+        //         setIsLoading(false)
+        //     })
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+        // Image processing with ImageBB
+        // const formData = new FormData();
+        // formData.append('image', product_images)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+        // const url = `https://api.imgbb.com/1/upload?&key=c76efd57d012df5b882d44b0f8f3394f`
+        // fetch(url, {
+        //     method: 'POST',
+        //     body: formData,
+        // })
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         console.log(data.data.display_url)
+        //         const product = {
+        //             product_name,
+        //             product_description,
+        //             product_features,
+        //             product_prices,
+        //             title: title,
+        //             product_images: data.data.display_url,
 
-### `npm run eject`
+        //         }
+        //         console.log(product)
+        //         // save doctor information to the database
+        //         fetch('https://project-one-server-ezazahmed16.vercel.app/products', {
+        //             method: 'POST',
+        //             headers: {
+        //                 'content-type': 'application/json',
+        //             },
+        //             body: JSON.stringify(product)
+        //         })
+        //             .then(res => res.json())
+        //             .then(result => {
+        //                 console.log(result);
+        //                 toast.success(`${product.product_name} is added successfully`);
+        //                 setIsLoading(false)
+        //             })
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+        //     })
+        //     .catch(error => console.log(error))
